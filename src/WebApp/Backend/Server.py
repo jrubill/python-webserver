@@ -1,7 +1,7 @@
 import socket
 import WebApp.Config as Config
 import threading
-import WebApp.request_handler as rh
+from WebApp.Backend import request_handler as rh
 
 
 class Server(object):
@@ -21,6 +21,7 @@ class Server(object):
             new_client.start()
 
     def handle_client(self, conn):
-        response = rh.handle_request(conn.recv(4096).decode())
+        data = conn.recv(1024)
+        response = rh.handle_request(data)
         conn.send(response.encode()) 
         conn.close()

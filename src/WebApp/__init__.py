@@ -1,4 +1,4 @@
-from WebApp import Server
+from WebApp.Backend import Server
 
 def run_server():
     S = Server.Server()
