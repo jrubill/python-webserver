@@ -9,12 +9,14 @@ def handle_request(request):
         route = r_type.split(' ')[1]
         if route in routes:
             try:
-                print(routes[route])
-                with open("../_html/"+routes[route], "r") as f:
+                with open("_html/"+routes[route], "r") as f:
                     return SUCCESS + f.read()
             except:
-                with open("_html/errors/404.html", "r") as f:
-                    return NOT_FOUND + "something went wrong :(" 
+                return NOT_FOUND + "something went wrong :(" 
         else:
-            with open("../_html/errors/404.html", "r") as f:
-                return NOT_FOUND + f.read()
+            print(route)
+            try:
+                with open("_html/errors/404.html", "r") as f:
+                    return NOT_FOUND + f.read()
+            except:
+                return NOT_FOUND + "something went wrong :("

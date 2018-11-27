@@ -2,7 +2,7 @@ import socket
 import WebApp.Config as Config
 import threading
 from WebApp.Backend import request_handler as rh
-
+import signal
 
 class Server(object):
     def __init__(self, IP_ADDR='localhost', PORT=5000):
@@ -10,6 +10,7 @@ class Server(object):
         self.IP_ADDR, self.PORT = IP_ADDR, PORT
         self.socket.bind((IP_ADDR, PORT))
         self.threads = list()
+        signal.signal(signal.SIGTERM, self.die)
 
     def run(self):
         self.socket.listen(1)
@@ -22,6 +23,14 @@ class Server(object):
 
     def handle_client(self, conn):
         data = conn.recv(1024)
-        response = rh.handle_request(data)
-        conn.send(response.encode()) 
+        response = rh.handle_request(data.decode('US-ASCII'))
+        try:
+            conn.send(response.encode()) 
+        except:
+            print("Error sending response")
         conn.close()
+
+    def die(self):
+        for thread in self.threads:
+            thread.exit()
+        self.socket.close()
